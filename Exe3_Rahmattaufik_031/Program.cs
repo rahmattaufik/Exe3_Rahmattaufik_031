@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,62 @@ namespace Exe3_Rahmattaufik_031
             else
                 return false;
         }
+        public void addNode()/*Method untuk menambahkan sebuah node kedalam list*/
+        {
+            int rollNumber;
+            string nama;
+            Console.WriteLine("\namaasukkan Nomor Mahasiswa : ");
+            rollNumber = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\namaasukkan Nama Mahasiswa : ");
+            nama = Console.ReadLine();
+            Node nodebaru = new Node();
+            nodebaru.rollNumber = rollNumber;
+            nodebaru.name = nama;
+
+            if (LAST == null || rollNumber <= LAST.rollNumber)/*Node Ditambahkan sebuah node*/
+            {
+                if ((LAST != null) && (rollNumber == LAST.rollNumber))
+                {
+                    Console.WriteLine("\nNomor Mahasiswa tidak diijinkan\n");
+                    return;
+                }
+                nodebaru.next = LAST;
+                LAST = nodebaru;
+                return;
+            }
+            /*Menemukan lokasi Node baru didalam list*/
+            Node previous, current;
+            previous = LAST;
+            current = LAST;
+
+            while ((current != null) && (rollNumber >= current.rollNumber))
+            {
+                if (rollNumber == current.rollNumber)
+                {
+                    Console.WriteLine("\nNomor mahasiswa sama tidak diijinkan");
+                    return;
+                }
+                previous = current;
+                current = current.next;
+            }
+            /*Node Baru akan ditempatkan diantara previous dan current*/
+
+            nodebaru.next = current;
+            previous.next = nodebaru;
+
+        }
+        public bool delNode(int name)
+        {
+            Node previous, current;
+            previous = current = null;
+            /*Check apakah node yang dimaksud ada didalam list atau tidak*/
+            if (Search(name, ref previous, ref current) == false)
+                return false;
+            previous.next = current.next;
+            if (current == LAST)
+                LAST = LAST.next;
+            return true;
+        }
 
         public void traverse()/*traverses  all the node of the list*/
         {
@@ -72,7 +129,7 @@ namespace Exe3_Rahmattaufik_031
             {
                 try
                 {
-                    Console.WriteLine("\nMenu");
+                    Console.WriteLine("\namaenu");
                     
                     Console.WriteLine("1. View all the records in the list");
                     Console.WriteLine("2. Search for a record in the list");
@@ -115,6 +172,27 @@ namespace Exe3_Rahmattaufik_031
                             }
                             break;
                         case '4':
+                            {
+                                obj.addNode();
+                            }
+                            break;
+                        case '5':
+                            {
+                                if (obj.listEmpty())
+                                {
+                                    Console.WriteLine("\nList Kosong");
+                                    break;
+                                }
+                                Console.Write("\namaasukkan rollNumber yang akan dihapus : ");
+                                int rollNumber = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine();
+                                if (obj.delNode(rollNumber) == false)
+                                    Console.WriteLine("\nData tidak ditemukan. ");
+                                else
+                                    Console.WriteLine("Data dengan nomor mahasiswa " + rollNumber + " dihapus ");
+                            }
+                            break;
+                        case '6':
                             return;
                         default:
                             {
